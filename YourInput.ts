@@ -34,7 +34,7 @@ class YourInput extends egret.Sprite {
         
     }
     private backgroundGraph():void{
-        var sky: egret.Bitmap = this.createBitmapByName("bgImage");
+        var sky: egret.Bitmap = this.createBitmapByName("bgImage_YourInput");
         sky.width = 640;
         sky.height = 1000;
         
@@ -69,7 +69,7 @@ class YourInput extends egret.Sprite {
         uButton.label = "确定";
         uButton.scaleX = 2;
         uButton.scaleY = 2;
-        uButton.skinName = "resource/skins/ButtonSkin.exml";
+        uButton.skinName = "resource/skins/ButtonSkin_YourInput.exml";
         uButton.horizontalCenter = 1;
         uButton.verticalCenter = 1;
         this.addChild(uButton);
@@ -90,7 +90,7 @@ class YourInput extends egret.Sprite {
         uButton2.label = "开启新的旅途";
         uButton2.scaleX = 2;
         uButton2.scaleY = 2;
-        uButton2.skinName = "resource/skins/ButtonSkin.exml";
+        uButton2.skinName = "resource/skins/ButtonSkin_YourInput.exml";
         this.addChild(uButton2);
         //uButton.addEventListener(egret.TouchEvent.TOUCH_TAP,function() { this.btnTouchHandler(uYou.text,this.puInputNumber) },this);
         //button.removeEventListener(egret.TouchEvent.TOUCH_TAP,function() { this.btnTouchHandler(uYou.text) },this);
@@ -181,7 +181,7 @@ class YourInput extends egret.Sprite {
             rdb.label = this.puOutputLocationList.OutputLocationList[i].label;
             rdb.value = i+1;
             rdb.group = radioGroup;
-            rdb.skinName = "resource/skins/radioButtonSkin.exml";
+            rdb.skinName = "resource/skins/radioButtonSkin_YourInput.exml";
             rdb.name = 'rdb'+i;
             this.addChild(rdb);
         }
