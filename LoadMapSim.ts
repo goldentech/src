@@ -12,16 +12,23 @@ class LoadMapSim extends egret.Sprite {
 
     public touchHouse ;
     private states;
+    private chatStates;
     private moveName = new egret.TextField;
+    private chatName = new egret.TextField;
+    
+    private chat; 
     
     
     private createSimMap(simWidth,simHeight):void {
         var bg: LoadBackGround = new LoadBackGround(simWidth,simHeight,"bgImage",false);
         this.addChild(bg);
                    
+        
+        this.chat = new ChatSocketNoBG(simWidth,simHeight);
 //        var storyBar: LoadStroyBar = new LoadStroyBar(60,120,1,0);
 //        this.addChild(storyBar);
         this.states = 0;
+        this.chatStates = 0;
         
         this.addMoveButton();
         
@@ -37,7 +44,7 @@ class LoadMapSim extends egret.Sprite {
         this.addChild(monster2);
         
         this.moveName= new egret.TextField;
-        this.moveName.text = "移 动"; this.moveName.x = 35; this.moveName.y = 150; 
+        this.moveName.text = "移 动"; this.moveName.x = 35; this.moveName.y = 160; 
         this.moveName.size = 32; 
         this.moveName.textColor = 0xFF4040;
         this.moveName.bold = true;
@@ -56,6 +63,7 @@ class LoadMapSim extends egret.Sprite {
         if(this.states == 0)
         {
            
+            this.addChatButton();
             this.addAllLocation();
             this.states = 1;
             this.moveName.text = "驻 足";
@@ -63,47 +71,87 @@ class LoadMapSim extends egret.Sprite {
         }
         else
         {
-           
-            this.removeAllLocation();
+            this.removeChatButton();  
+            if(this.chatStates == 0)
+            {
+                this.removeAllLocation();
+            }
+            else
+            {
+                this.chatStates = 0;
+                this.removeChild(this.chat);
+            }
             this.states = 0;
             this.moveName.text = "移 动";
         }
     }
     
+    private addChatButton() {
+        var monster: egret.Bitmap = new egret.Bitmap(RES.getRes("monster"));
+        monster.x = 400;
+        
+        monster.y = 0;
+        monster.name = "chatButton";
+        this.addChild(monster);
+
+        this.chatName = new egret.TextField;
+        this.chatName.text = "聊 天"; this.chatName.x = 450; this.chatName .y = 160;
+        this.chatName.size = 32;
+        this.chatName.textColor = 0xFF4040;
+        this.chatName.bold = true;
+        this.addChild(this.chatName );
+        
+        
+        monster.touchEnabled = true;
+        monster.addEventListener(egret.TouchEvent.TOUCH_TAP,function() { this.changeChatStates() },this);
+        this.chatName.touchEnabled = true;
+        this.chatName.addEventListener(egret.TouchEvent.TOUCH_TAP,function() { this.changeChatStates() },this);
+    }
+    
+    
+    private changeChatStates() {
+        if(this.chatStates == 0) {
+
+            this.removeAllLocation();   
+            this.addChild(this.chat);
+            this.chatStates = 1;
+            this.chatName.text = "移 动";
+
+        }
+        else {
+            this.removeChild(this.chat);
+            this.addAllLocation();
+            this.chatStates = 0;
+            this.chatName.text = "聊 天";
+        }
+    }
+    
+    
+    private removeChatButton()
+    {
+        this.removeChild(this.getChildByName("chatButton"));
+        this.removeChild(this.chatName);
+    }
+    
+    
     private addAllLocation()
     {
+        var sims= new MapSimData().getSixSims();
         
+//        { position: 1,x: x,y: y,sourceName: "sim1",buildName: "练武场" }
         
-        var house1: LoadOneBuild = new LoadOneBuild(1,50,275,"sim1","练武场");
-        house1.name = "h1";
-        house1.touchEnabled = true;
-        house1.addEventListener(egret.TouchEvent.TOUCH_TAP,this.touchHandler,this);
-        this.addChild(house1);
-        var house2: LoadOneBuild = new LoadOneBuild(2,250,275,"sim2","书  房");
-        house2.name = "h2";
-        house2.touchEnabled = true;
-        house2.addEventListener(egret.TouchEvent.TOUCH_TAP,this.touchHandler,this);
-        this.addChild(house2);
-        var house3: LoadOneBuild = new LoadOneBuild(3,450,275,"sim3","酒  馆");
-        house3.name = "h3";
-        house3.touchEnabled = true;
-        house3.addEventListener(egret.TouchEvent.TOUCH_TAP,this.touchHandler,this);
-        this.addChild(house3);
-        var house4: LoadOneBuild = new LoadOneBuild(4,50,605,"sim4","小  巷");
-        house4.name = "h4";
-        house4.touchEnabled = true;
-        house4.addEventListener(egret.TouchEvent.TOUCH_TAP,this.touchHandler,this);
-        this.addChild(house4);
-        var house5: LoadOneBuild = new LoadOneBuild(5,250,605,"sim5","公正峰");
-        house5.name = "h5";
-        house5.touchEnabled = true;
-        house5.addEventListener(egret.TouchEvent.TOUCH_TAP,this.touchHandler,this);
-        this.addChild(house5);
-        var house6: LoadOneBuild = new LoadOneBuild(6,450,605,"sim6","医  馆");
-        house6.name = "h6";
-        house6.touchEnabled = true;
-        house6.addEventListener(egret.TouchEvent.TOUCH_TAP,this.touchHandler,this);
-        this.addChild(house6);
+        for(var i = 0;i < sims.sims.length; i ++)
+        {
+             var s = sims.sims[i]
+             
+             var house1: LoadOneBuild = new LoadOneBuild(s.position,s.x,s.y,s.sourceName,s.buildName);
+             house1.name = "h" + s.position;
+             house1.touchEnabled = true;
+             house1.addEventListener(egret.TouchEvent.TOUCH_TAP,this.touchHandler,this);
+             this.addChild(house1);
+        }
+        
+       
     }
     
     private removeAllLocation() {

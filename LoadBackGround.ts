@@ -12,10 +12,6 @@ class LoadBackGround extends egret.Sprite {
 
     private createBackGround(simWidth,simHeight,sourceName,ifDetail):void {
         
-        
-       
-        
-        
         this.bg = new egret.Bitmap(RES.getRes(sourceName));
         this.bg.x = 0; this.bg.y = 0; this.bg.width = simWidth; this.bg.height = simHeight;
         //this.bg.touchEnabled;
